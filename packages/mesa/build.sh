@@ -30,7 +30,6 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -Dllvm=enabled
 -Dshared-llvm=enabled
 -Dplatforms=x11,wayland
--Dgallium-drivers=llvmpipe,softpipe,iris,zink
 -Dgallium-rusticl=true
 -Dglvnd=enabled
 -Dxmlconfig=disabled
@@ -78,13 +77,17 @@ termux_step_pre_configure() {
 	export PATH="${_WRAPPER_BIN}:${CARGO_HOME}/bin:${PATH}"
 
 	local _vk_drivers="swrast"
+	local _gallium_drivers="llvmpipe,softpipe,zink"
 	if [ $TERMUX_ARCH = "arm" ] || [ $TERMUX_ARCH = "aarch64" ]; then
 		_vk_drivers+=",freedreno"
 		TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -Dfreedreno-kmds=msm,kgsl"
 	else
 		_vk_drivers+=",intel"
+		_gallium_drivers+=",iris"
+  		
 	fi
 	TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -Dvulkan-drivers=$_vk_drivers"
+ 	TERMUX_PKG_EXTRA_CONFIGURE_ARGS+= "-Dgallium-drivers=$_gallium_drivers"
 }
 
 termux_step_post_configure() {
