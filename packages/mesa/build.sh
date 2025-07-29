@@ -86,7 +86,7 @@ termux_step_pre_configure() {
 		_gallium_drivers+=",iris"
 	fi
 	TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -Dvulkan-drivers=$_vk_drivers"
- 	TERMUX_PKG_EXTRA_CONFIGURE_ARGS+= "-Dgallium-drivers=$_gallium_drivers"
+	TERMUX_PKG_EXTRA_CONFIGURE_ARGS+= "-Dgallium-drivers=$_gallium_drivers"
 }
 
 termux_step_post_configure() {
