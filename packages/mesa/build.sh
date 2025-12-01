@@ -80,6 +80,7 @@ termux_step_pre_configure() {
 	fi
 	export LLVM_CONFIG="${TERMUX_PREFIX}/bin/llvm-config"
 	export PATH="${_WRAPPER_BIN}:${CARGO_HOME}/bin:${PATH}"
+	export PATH="${TERMUX_PKG_BUILDER_DIR}/prebuilts_mesa-build-deps:${PATH}"
 
 	local _vk_drivers="swrast"
 	local _gallium_drivers="llvmpipe,softpipe,zink"
