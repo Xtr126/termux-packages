@@ -250,7 +250,7 @@ jobs:
             ./build-package.sh -I -C -a "${{ matrix.target_arch }}" "${packages[@]}"
           else
             ./scripts/run-docker.sh sudo apt update
-            ./scripts/run-docker.sh sudo apt install libllvmspirvlib19.1 llvm-19 libclang1-19 libclang-cpp19 libtinfo6 libzstd1
+            ./scripts/run-docker.sh sudo apt install -y libllvmspirvlib19.1 llvm-19 libclang1-19 libclang-cpp19 libtinfo6 libzstd1
             ./scripts/run-docker.sh ./build-package.sh -I -C -a "${{ matrix.target_arch }}" "${packages[@]}"
           fi
         fi
