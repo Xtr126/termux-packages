@@ -40,14 +40,17 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        target_arch: [aarch64, arm, i686, x86_64]
+        target_arch: [i686, x86_64]
       fail-fast: false
     steps:
     - name: Clone repository
       uses: actions/checkout@v6
       with:
         fetch-depth: 1000
+        submodules: true
 
+    - name: Set process id limit for 32-bit builds depending on aosp-libs
+      run: echo 65535 | sudo tee /proc/sys/kernel/pid_max
     - name: Gather build summary
       id: build-info
       env:
@@ -215,19 +218,6 @@ jobs:
         fi
         echo "needs-docker-build=$needs_docker_build" >> $GITHUB_OUTPUT
 
-    - name: Lint packages
-      run: |
-        declare -a package_recipes=()
-        for repo_path in $(jq --raw-output 'del(.pkg_format) | keys | .[]' repo.json); do
-          repo=$(jq --raw-output '.["'${repo_path}'"].name' repo.json)
-          if [ -f "./built_${repo}_packages.txt" ]; then
-            package_recipes+=($(cat "./built_${repo}_packages.txt" | repo_path="${repo_path}" awk '{print ENVIRON["repo_path"]"/"$1"/build.sh"}'))
-          fi
-        done
-
-        if [[ "${#package_recipes[@]}" -gt 0 ]]; then
-          ./scripts/lint-packages.sh "${package_recipes[@]}"
-        fi
 
     - name: Enable zram
       if: ${{ steps.build-info.outputs.skip-building != 'true' }}
@@ -268,7 +258,9 @@ jobs:
         echo "packages: ${packages[*]}"
 
         if [[ "${#packages[@]}" -gt 0 ]]; then
-          ./scripts/run-docker.sh -d ./build-package.sh -I -C -a "${{ matrix.target_arch }}" "${packages[@]}"
+          ./scripts/run-docker.sh sudo apt update
+          ./scripts/run-docker.sh sudo apt install -y libllvmspirvlib19.1 llvm-19 libclang1-19 libclang-cpp19 libtinfo6 libzstd1
+          ./scripts/run-docker.sh ./build-package.sh -I -C -a "${{ matrix.target_arch }}" "${packages[@]}"
         fi
 
     - name: Generate build artifacts

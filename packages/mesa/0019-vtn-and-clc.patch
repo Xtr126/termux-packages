@@ -1,0 +1,52 @@
+diff --git a/src/compiler/clc/meson.build b/src/compiler/clc/meson.build
+index d484532..a1990b7 100644
+--- a/src/compiler/clc/meson.build
++++ b/src/compiler/clc/meson.build
+@@ -123,17 +123,8 @@ idep_mesaclc = declare_dependency(
+ 
+ if get_option('mesa-clc') != 'system' and (with_driver_using_cl or \
+                                            get_option('install-mesa-clc'))
+-  prog_mesa_clc = executable(
++  prog_mesa_clc = find_program(
+     'mesa_clc',
+-    ['mesa_clc.c'],
+-    include_directories : [inc_include, inc_src],
+-    c_args : [pre_args, no_override_init_args],
+-    link_args : [ld_args_build_id],
+-    dependencies : [idep_mesaclc, dep_llvm, dep_spirv_tools, idep_getopt],
+-    # If we can run host binaries directly, just build mesa_clc for the host.
+-    # Most commonly this happens when doing a cross compile from an x86_64 build
+-    # machine to an x86 host
+-    native : not meson.can_run_host_binaries(),
+-    install : get_option('install-mesa-clc'),
++    native : true,
+   )
+ endif
+diff --git a/src/compiler/spirv/meson.build b/src/compiler/spirv/meson.build
+index 5110cc6..5cb24d1 100644
+--- a/src/compiler/spirv/meson.build
++++ b/src/compiler/spirv/meson.build
+@@ -80,18 +80,11 @@ spirv2nir = executable(
+ 
+ if get_option('mesa-clc') != 'system' and (with_driver_using_cl or \
+                                            get_option('install-mesa-clc'))
+-   prog_vtn_bindgen2 = executable(
+-     'vtn_bindgen2',
+-     ['vtn_bindgen2.c'],
+-     include_directories : [inc_include, inc_src],
+-     c_args : [c_msvc_compat_args, no_override_init_args],
+-     dependencies : [idep_vtn, idep_mesautil, idep_nir],
+-     # If we can run host binaries directly, just build vtn_bindgen for the host.
+-     # Most commonly this happens when doing a cross compile from an x86_64 build
+-     # machine to an x86 host
+-     native : not meson.can_run_host_binaries(),
+-     install : get_option('install-mesa-clc'),
+-   )
++   prog_vtn_bindgen2 = find_program(
++    'vtn_bindgen2',
++    native : true,
++    required : with_vulkan_overlay_layer or with_aco_tests or with_bvh
++  )
+ endif
+ 
+ if with_tests
