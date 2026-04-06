@@ -3,23 +3,21 @@ TERMUX_PKG_DESCRIPTION="A compatibility layer for running Windows programs (Hang
 TERMUX_PKG_LICENSE="LGPL-2.1"
 TERMUX_PKG_LICENSE_FILE="LICENSE, LICENSE.OLD, COPYING.LIB"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="11.0~rc1"
-TERMUX_PKG_REVISION=1
-_REAL_VERSION="${TERMUX_PKG_VERSION/\~/-}"
+TERMUX_PKG_VERSION="11.4"
 TERMUX_PKG_SRCURL=(
-	https://github.com/AndreRH/wine/archive/refs/tags/hangover-$_REAL_VERSION.tar.gz
-	https://github.com/AndreRH/hangover/releases/download/hangover-$_REAL_VERSION/hangover_${_REAL_VERSION}_ubuntu2004_focal_arm64.tar
+	"https://github.com/AndreRH/wine/archive/refs/tags/hangover-${TERMUX_PKG_VERSION/\~/-}.tar.gz"
+	"https://github.com/AndreRH/hangover/releases/download/hangover-${TERMUX_PKG_VERSION/\~/-}/hangover_${TERMUX_PKG_VERSION/\~/-}_ubuntu2204_jammy_arm64.tar"
 )
 TERMUX_PKG_SHA256=(
-	96cb92827e6067a4a533d59def1fc82410a71b4139986a17ec976f3362dc9e67
-	d2e256723cbd19bd08234655b3511cbce13c8bb9633a1ed37af1bf94063970c9
+	e6714947e68ee6c7ab03963752945138b60e98b8e24a41cbe8858cf06eb6946d
+	95779011771040c1b3d2aff80f57098dfde8e2902ed64b9a80a87608b7a32389
 )
 TERMUX_PKG_DEPENDS="fontconfig, freetype, krb5, libandroid-spawn, libc++, libgmp, libgnutls, libxcb, libxcomposite, libxcursor, libxfixes, libxrender, opengl, pulseaudio, sdl2, vulkan-loader, xorg-xrandr"
 TERMUX_PKG_ANTI_BUILD_DEPENDS="vulkan-loader"
 TERMUX_PKG_BUILD_DEPENDS="libandroid-spawn-static, vulkan-loader-generic"
 TERMUX_PKG_NO_STATICSPLIT=true
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_UPDATE_TAG_TYPE="latest-release-tag"
+TERMUX_PKG_UPDATE_TAG_TYPE="newest-tag"
 TERMUX_PKG_EXCLUDED_ARCHES="arm, i686, x86_64"
 
 TERMUX_PKG_HOSTBUILD=true
@@ -87,29 +85,6 @@ enable_tools=yes
 # TODO: `--enable-archs=arm` doesn't build with option `--with-mingw=clang`, but
 # TODO: `arm64ec` doesn't build with option `--with-mingw` (arm64ec-w64-mingw32-clang)
 
-termux_pkg_auto_update() {
-	local latest_tag
-	latest_tag="$(termux_github_api_get_tag "${TERMUX_PKG_SRCURL[1]}" "${TERMUX_PKG_UPDATE_TAG_TYPE}")"
-	(( ${#latest_tag} )) || {
-		printf '%s\n' \
-		'WARN: Auto update failure!' \
-		"latest_tag=${latest_tag}"
-	return
-	} >&2
-
-	latest_tag="${latest_tag#*-}"
-	if [[ "${latest_tag}" == "${_REAL_VERSION}" ]]; then
-		echo "INFO: No update needed. Already at version '${_REAL_VERSION}'."
-		return
-	fi
-
-	if [ "${latest_tag/-/\~}" != "${latest_tag}" ]; then
-		latest_tag="${latest_tag/-/\~}"
-	fi
-
-	termux_pkg_upgrade_version "${latest_tag}"
-}
-
 _setup_llvm_mingw_toolchain() {
 	# LLVM-mingw's version number must not be the same as the NDK's.
 	local _llvm_mingw_version=21
@@ -152,6 +127,9 @@ termux_step_pre_configure() {
 	LDFLAGS="${LDFLAGS/-Wl,-z,relro,-z,now/}"
 
 	LDFLAGS+=" -landroid-spawn"
+
+	# https://github.com/termux-user-repository/tur/commit/9388bf3599bba33d7bd052cab0679fe9cd5917d2#commitcomment-176464300
+	LDFLAGS+=" -Wl,--rosegment"
 }
 
 termux_step_make() {
@@ -176,7 +154,7 @@ termux_step_post_make_install() {
 	for _type in wowbox64 libwow64fex libarm64ecfex; do
 		mkdir -p $_type
 		cd $_type
-		ar -x "$TERMUX_PKG_SRCDIR"/hangover-${_type}_${_REAL_VERSION}_arm64.deb
+		ar -x "$TERMUX_PKG_SRCDIR"/hangover-${_type}_${TERMUX_PKG_VERSION/\~/-}_arm64.deb
 		tar xf data.tar.xz
 		install -Dm644 usr/lib/wine/aarch64-windows/$_type.dll \
 			"$TERMUX_PREFIX"/opt/hangover-wine/lib/wine/aarch64-windows/$_type.dll
@@ -188,6 +166,6 @@ termux_step_post_make_install() {
 	# Install LICENSE file for hangover
 	mkdir -p "$TERMUX_PREFIX"/share/doc/hangover
 	rm -f "$TERMUX_PREFIX"/share/doc/hangover/copyright
-	curl -L https://raw.githubusercontent.com/AndreRH/hangover/refs/tags/hangover-${_REAL_VERSION}/LICENSE \
+	curl -L https://raw.githubusercontent.com/AndreRH/hangover/refs/tags/hangover-${TERMUX_PKG_VERSION/\~/-}/LICENSE \
 		-o "$TERMUX_PREFIX"/share/doc/hangover/copyright
 }

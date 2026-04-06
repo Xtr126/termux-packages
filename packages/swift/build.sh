@@ -4,7 +4,7 @@ TERMUX_PKG_LICENSE="Apache-2.0, NCSA"
 TERMUX_PKG_MAINTAINER="@finagolfin"
 TERMUX_PKG_VERSION=6.2.1
 SWIFT_RELEASE="RELEASE"
-TERMUX_PKG_SRCURL=https://github.com/swiftlang/swift/archive/swift-$TERMUX_PKG_VERSION-$SWIFT_RELEASE.tar.gz
+TERMUX_PKG_SRCURL=https://github.com/swiftlang/swift/archive/refs/tags/swift-$TERMUX_PKG_VERSION-$SWIFT_RELEASE.tar.gz
 TERMUX_PKG_SHA256=39825af3b1ab523ed4970e1315a14b5379fb5f8046170c27a330a179d982fe2a
 TERMUX_PKG_AUTO_UPDATE=false
 TERMUX_PKG_HOSTBUILD=true
@@ -17,7 +17,7 @@ TERMUX_PKG_NO_STATICSPLIT=true
 # TERMUX_PKG_FORCE_CMAKE to make the build system aware that CMake is
 # needed.
 TERMUX_PKG_FORCE_CMAKE=true
-TERMUX_CMAKE_BUILD=Ninja
+TERMUX_PKG_CMAKE_BUILD=Ninja
 
 SWIFT_COMPONENTS="autolink-driver;compiler;clang-resource-dir-symlink;swift-remote-mirror;license;sourcekit-inproc;static-mirror-lib;stdlib;sdk-overlay"
 SWIFT_TOOLCHAIN_FLAGS="-RA --llvm-targets-to-build='X86;ARM;AArch64' -j $TERMUX_PKG_MAKE_PROCESSES --install-prefix=$TERMUX_PREFIX"
@@ -103,7 +103,7 @@ termux_step_post_get_source() {
 		fi
 
 		termux_download \
-			https://github.com/$GH_ORG/$library/archive/$TAR_NAME.tar.gz \
+			https://github.com/$GH_ORG/$library/archive/refs/tags/$TAR_NAME.tar.gz \
 			$TERMUX_PKG_CACHEDIR/$library-$SRC_VERSION.tar.gz \
 			${library_checksums[$library]}
 		tar xf $TERMUX_PKG_CACHEDIR/$library-$SRC_VERSION.tar.gz

@@ -2,9 +2,9 @@ TERMUX_PKG_HOMEPAGE=https://www.nginx.org
 TERMUX_PKG_DESCRIPTION="Lightweight HTTP server"
 TERMUX_PKG_LICENSE="BSD 2-Clause"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="1.29.4"
+TERMUX_PKG_VERSION="1.29.7"
 TERMUX_PKG_SRCURL=https://nginx.org/download/nginx-$TERMUX_PKG_VERSION.tar.gz
-TERMUX_PKG_SHA256=5a7d37eee505866fbab5810fa9f78247d6d5d9157a595c4e7a72043141ddab25
+TERMUX_PKG_SHA256=673f8fb8c0961c44fbd9410d6161831453609b44063d3f2948253fc2b5692139
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="libandroid-glob, libcrypt, pcre2, openssl, zlib"
 TERMUX_PKG_BUILD_IN_SRC=true
@@ -70,6 +70,7 @@ termux_step_configure() {
 		--with-http_dav_module \
 		--with-stream \
 		--with-stream_ssl_module \
+		--with-stream_ssl_preread_module \
 		$DEBUG_FLAG
 }
 

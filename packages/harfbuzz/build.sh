@@ -2,10 +2,9 @@ TERMUX_PKG_HOMEPAGE=https://www.freedesktop.org/wiki/Software/HarfBuzz/
 TERMUX_PKG_DESCRIPTION="OpenType text shaping engine"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="12.2.0"
-TERMUX_PKG_REVISION=2
+TERMUX_PKG_VERSION="14.1.0"
 TERMUX_PKG_SRCURL=https://github.com/harfbuzz/harfbuzz/archive/refs/tags/${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_SHA256=f63fc519f150465bd0bdafcdf3d0e9c23474f4c474171cd515ea1b3a72c081fb
+TERMUX_PKG_SHA256=9deffe9dded3c367c7d08265fd0a64193fad505a362a4889d898568c1cd46812
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="freetype, glib, libcairo, libgraphite"
 TERMUX_PKG_BUILD_DEPENDS="g-ir-scanner, glib-cross"
@@ -47,5 +46,6 @@ termux_step_post_make_install() {
 	install -Dm600 "$TERMUX_PKG_BUILDER_DIR"/hb-info.1 "$TERMUX_PREFIX"/share/man/man1/hb-info.1
 	install -Dm600 "$TERMUX_PKG_BUILDER_DIR"/hb-shape.1 "$TERMUX_PREFIX"/share/man/man1/hb-shape.1
 	install -Dm600 "$TERMUX_PKG_BUILDER_DIR"/hb-subset.1 "$TERMUX_PREFIX"/share/man/man1/hb-subset.1
+	install -Dm600 "$TERMUX_PKG_BUILDER_DIR"/hb-vector.1 "$TERMUX_PREFIX"/share/man/man1/hb-vector.1
 	install -Dm600 "$TERMUX_PKG_BUILDER_DIR"/hb-view.1 "$TERMUX_PREFIX"/share/man/man1/hb-view.1
 }

@@ -2,14 +2,14 @@ TERMUX_PKG_HOMEPAGE=https://godotengine.org
 TERMUX_PKG_DESCRIPTION="Advanced cross-platform 2D and 3D game engine"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="4.5.1"
-TERMUX_PKG_SRCURL=https://github.com/godotengine/godot/archive/$TERMUX_PKG_VERSION-stable.tar.gz
-TERMUX_PKG_SHA256=c62a6eafc4a2de44fda3ad2db6dbe989726cd4c37537e0af119eeb6886fe49f2
-TERMUX_PKG_DEPENDS="brotli, ca-certificates, fontconfig, freetype, glu, libandroid-execinfo, libc++, libenet, libgraphite, libjpeg-turbo, libogg, libtheora, libvorbis, libvpx, libwebp, libwslay, libxcursor, libxi, libxinerama, libxkbcommon, libxrandr, mbedtls, miniupnpc, opengl, opusfile, pcre2, sdl3, speechd, zlib, zstd"
+TERMUX_PKG_VERSION="4.6.2"
+TERMUX_PKG_SRCURL="https://github.com/godotengine/godot/archive/refs/tags/$TERMUX_PKG_VERSION-stable.tar.gz"
+TERMUX_PKG_SHA256=908b759e7517fec65d687b3d468cd639fd8967d25da1522ef8a2087af638b3fe
+TERMUX_PKG_DEPENDS="brotli, ca-certificates, fontconfig, freetype, glu, libandroid-execinfo, libc++, libenet, libgraphite, libjpeg-turbo, libogg, libtheora, libvorbis, libvpx, libwebp, libwslay, libxcursor, libxi, libxinerama, libxkbcommon, libxrandr, mbedtls, miniupnpc, opengl, opusfile, pcre2, python, sdl3, speechd, zlib, zstd"
 TERMUX_PKG_BUILD_DEPENDS="pulseaudio, yasm"
-TERMUX_PKG_PYTHON_COMMON_DEPS="scons"
+TERMUX_PKG_PYTHON_COMMON_BUILD_DEPS="scons"
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_UPDATE_VERSION_REGEXP='\d+\.\d+(\.\d+)?'
+TERMUX_PKG_UPDATE_VERSION_REGEXP='\d+\.\d+(\.\d+)?(?=-stable)'
 TERMUX_PKG_BUILD_IN_SRC=true
 
 termux_step_make() {
